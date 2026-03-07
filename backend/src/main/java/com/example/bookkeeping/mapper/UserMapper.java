@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface UserMapper {
@@ -18,4 +19,7 @@ public interface UserMapper {
 
     @Select("SELECT * FROM users WHERE id = #{id}")
     User findById(Long id);
+
+    @Update("UPDATE users SET password = #{password} WHERE id = #{id}")
+    void updatePassword(Long id, String password);
 }

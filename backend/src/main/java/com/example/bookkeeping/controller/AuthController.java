@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -48,5 +50,13 @@ public class AuthController {
         // Aspect will handle logging and exceptions
         String token = authService.loginWithCode(phone, code);
         return ResponseEntity.ok(Map.of("token", token));
+    }
+
+    @PostMapping("/update-password")
+    public ResponseEntity<?> updatePassword(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute("userId");
+        String newPassword = request.get("password");
+        authService.updatePassword(userId, newPassword);
+        return ResponseEntity.ok().build();
     }
 }

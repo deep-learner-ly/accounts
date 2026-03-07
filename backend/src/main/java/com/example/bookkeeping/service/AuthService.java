@@ -82,6 +82,10 @@ public class AuthService {
         return jwtUtil.generateToken(user.getId(), user.getPhone());
     }
 
+    public void updatePassword(Long userId, String newPassword) {
+        userMapper.updatePassword(userId, hashPassword(newPassword));
+    }
+
     private String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");

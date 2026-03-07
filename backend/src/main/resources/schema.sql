@@ -34,6 +34,17 @@ MERGE INTO users (id, phone, password) KEY(id) VALUES (1, '13800138000', 'passwo
 -- Reset sequence to ensure next ID > 1
 ALTER TABLE users ALTER COLUMN id RESTART WITH 2;
 
+-- Reminders table
+CREATE TABLE IF NOT EXISTS reminders (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL UNIQUE,
+    enabled BOOLEAN DEFAULT FALSE,
+    time TIME,
+    repeat_days VARCHAR(50), -- "1,2,3,4,5"
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
 -- Insert default categories if not exists
 MERGE INTO categories (id, name, type, user_id) KEY(id) VALUES 
 (1, 'Salary', 'INCOME', NULL),

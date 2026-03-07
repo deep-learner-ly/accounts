@@ -1,6 +1,6 @@
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     phone VARCHAR(20) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Categories table
 CREATE TABLE IF NOT EXISTS categories (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     type VARCHAR(20) NOT NULL, -- 'INCOME' or 'EXPENSE'
     user_id BIGINT, -- NULL for system default, otherwise user specific
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS categories (
 
 -- Transactions table
 CREATE TABLE IF NOT EXISTS transactions (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     amount DECIMAL(15, 2) NOT NULL,
     type VARCHAR(20) NOT NULL, -- 'INCOME' or 'EXPENSE'
     category_id BIGINT,
@@ -30,25 +30,13 @@ CREATE TABLE IF NOT EXISTS transactions (
 );
 
 -- Insert default user (ID 1)
-MERGE INTO users (id, phone, password) KEY(id) VALUES (1, '13800138000', 'password123');
--- Reset sequence to ensure next ID > 1
-ALTER TABLE users ALTER COLUMN id RESTART WITH 2;
-
--- Reminders table
-CREATE TABLE IF NOT EXISTS reminders (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id BIGINT NOT NULL UNIQUE,
-    enabled BOOLEAN DEFAULT FALSE,
-    time TIME,
-    repeat_days VARCHAR(50), -- "1,2,3,4,5"
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
+INSERT INTO users (id, phone, password) VALUES (1, '13800138000', 'password123') ON CONFLICT (id) DO NOTHING;
 
 -- Insert default categories if not exists
-MERGE INTO categories (id, name, type, user_id) KEY(id) VALUES 
+INSERT INTO categories (id, name, type, user_id) VALUES 
 (1, 'Salary', 'INCOME', NULL),
 (2, 'Food', 'EXPENSE', NULL),
 (3, 'Transport', 'EXPENSE', NULL),
 (4, 'Housing', 'EXPENSE', NULL),
-(5, 'Entertainment', 'EXPENSE', NULL);
+(5, 'Entertainment', 'EXPENSE', NULL)
+ON CONFLICT (id) DO NOTHING;
