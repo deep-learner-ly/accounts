@@ -68,7 +68,15 @@ public class AuthService {
             user = new User();
             user.setPhone(phone);
             user.setPassword(hashPassword(UUID.randomUUID().toString()));
-            userMapper.insert(user);
+            try {
+                userMapper.insert(user);
+            } catch (Exception e) {
+                // If insert fails (e.g. race condition), try to fetch again
+                user = userMapper.findByPhone(phone);
+                if (user == null) {
+                    throw new RuntimeException("Failed to register user", e);
+                }
+            }
         }
         
         return jwtUtil.generateToken(user.getId(), user.getPhone());

@@ -31,6 +31,8 @@ CREATE TABLE IF NOT EXISTS transactions (
 
 -- Insert default user (ID 1)
 MERGE INTO users (id, phone, password) KEY(id) VALUES (1, '13800138000', 'password123');
+-- Reset sequence to ensure next ID > 1
+ALTER TABLE users ALTER COLUMN id RESTART WITH 2;
 
 -- Insert default categories if not exists
 MERGE INTO categories (id, name, type, user_id) KEY(id) VALUES 
