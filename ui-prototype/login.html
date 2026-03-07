@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookkeeping App - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app-container" style="align-items: center; min-height: 100vh;">
+    <div class="mobile-screen" style="justify-content: center; padding: 40px;">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <div style="width: 80px; height: 80px; background-color: #007bff; border-radius: 20px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                <i class="fas fa-wallet" style="font-size: 40px; color: white;"></i>
+            </div>
+            <h1 style="font-size: 1.5rem; color: #333;">欢迎回来</h1>
+            <p style="color: #6c757d; margin-top: 10px;">请登录您的账号</p>
+        </div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label class="form-label">手机号</label>
+                <input type="tel" id="phone" class="form-control" placeholder="请输入手机号" value="13800138000" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">密码</label>
+                <input type="password" id="password" class="form-control" placeholder="请输入密码" value="password123" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="margin-top: 20px;">登录</button>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="#" onclick="alert('注册功能请直接使用登录接口测试')" style="color: #007bff; text-decoration: none; font-size: 0.9rem;">还没有账号？立即注册</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const phone = document.getElementById('phone').value;
+        const password = document.getElementById('password').value;
+        const btn = e.target.querySelector('button');
+
+        try {
+            btn.disabled = true;
+            btn.textContent = '登录中...';
+            
+            // Try to register first (for demo convenience), if fails then login
+            try {
+                await register(phone, password);
+            } catch (err) {
+                // If user exists, try login
+                await login(phone, password);
+            }
+
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error(error);
+            alert('登录失败: ' + error.message);
+            btn.disabled = false;
+            btn.textContent = '登录';
+        }
+    });
+</script>
+
+</body>
+</html>

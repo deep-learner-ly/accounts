@@ -1,0 +1,1 @@
+window.API_BASE_URL = "https://bookkeeping-backend.onrender.com/api";

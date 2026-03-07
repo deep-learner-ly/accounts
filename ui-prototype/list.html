@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookkeeping App - Transactions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .date-header {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin: 15px 0 8px;
+            font-weight: 600;
+        }
+        .transaction-actions {
+            display: none;
+            margin-left: 10px;
+        }
+        .transaction-item:hover .transaction-actions {
+            display: block;
+        }
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Transaction List Screen -->
+    <div class="mobile-screen">
+        <header class="app-header">
+            <div class="title">账单明细</div>
+        </header>
+
+        <div class="app-content">
+            <!-- Filter Bar -->
+            <div style="display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px;">
+                <button class="btn btn-sm" style="background-color: #007bff; color: white; width: auto; flex: none;">全部</button>
+                <button class="btn btn-sm" style="background-color: white; color: #333; border: 1px solid #ddd; width: auto; flex: none;">餐饮</button>
+                <button class="btn btn-sm" style="background-color: white; color: #333; border: 1px solid #ddd; width: auto; flex: none;">交通</button>
+                <button class="btn btn-sm" style="background-color: white; color: #333; border: 1px solid #ddd; width: auto; flex: none;">购物</button>
+            </div>
+
+            <div id="transaction-list">
+                <div style="text-align: center; color: #999; padding: 20px;">加载中...</div>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </a>
+            <a href="list.html" class="nav-item active">
+                <i class="fas fa-list"></i>
+                <span>明细</span>
+            </a>
+            <a href="stats.html" class="nav-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>统计</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </a>
+        </nav>
+    </div>
+</div>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        if (!checkLogin()) return;
+
+        try {
+            const transactions = await fetchTransactions();
+            renderTransactions(transactions);
+        } catch (error) {
+            console.error('Error loading transactions:', error);
+            alert('加载失败');
+        }
+    });
+
+    function renderTransactions(transactions) {
+        const container = document.getElementById('transaction-list');
+        
+        if (transactions.length === 0) {
+            container.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">暂无交易记录</div>';
+            return;
+        }
+
+        // Group by date
+        const grouped = transactions.reduce((acc, t) => {
+            const date = t.transactionDate;
+            if (!acc[date]) acc[date] = [];
+            acc[date].push(t);
+            return acc;
+        }, {});
+
+        // Sort dates descending
+        const sortedDates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
+
+        let html = '';
+        sortedDates.forEach(date => {
+            html += `<div class="date-header">${date}</div>`;
+            html += `<div class="card" style="padding: 0 15px;">`;
+            
+            grouped[date].forEach(t => {
+                const isExpense = t.type === 'EXPENSE';
+                const amountClass = isExpense ? 'expense' : 'income';
+                const sign = isExpense ? '-' : '+';
+                const iconClass = getCategoryIcon(t.categoryId);
+
+                html += `
+                    <div class="transaction-item">
+                        <div class="t-icon">
+                            <i class="fas ${iconClass}"></i>
+                        </div>
+                        <div class="t-details">
+                            <div class="t-title">${t.description || '未命名'}</div>
+                            <div class="t-date">${t.transactionDate}</div>
+                        </div>
+                        <div class="t-amount ${amountClass}">${sign} ¥ ${parseFloat(t.amount).toFixed(2)}</div>
+                        <div class="transaction-actions">
+                            <button class="btn btn-danger btn-sm" onclick="handleDelete(${t.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+        });
+
+        container.innerHTML = html;
+    }
+
+    async function handleDelete(id) {
+        if(confirm('确定要删除这条记录吗？')) {
+            try {
+                await deleteTransaction(id);
+                // Reload list
+                const transactions = await fetchTransactions();
+                renderTransactions(transactions);
+            } catch (error) {
+                alert('删除失败: ' + error.message);
+            }
+        }
+    }
+
+    function getCategoryIcon(categoryId) {
+        const icons = {
+            1: 'fa-money-bill-wave',
+            2: 'fa-utensils',
+            3: 'fa-bus',
+            4: 'fa-home',
+            5: 'fa-gamepad'
+        };
+        return icons[categoryId] || 'fa-question';
+    }
+</script>
+
+</body>
+</html>

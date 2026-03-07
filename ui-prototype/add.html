@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookkeeping App - Add Transaction</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Add Transaction Screen -->
+    <div class="mobile-screen">
+        <header class="app-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <a href="index.html" style="color: white; text-decoration: none;"><i class="fas fa-arrow-left"></i></a>
+                <div class="title">记一笔</div>
+                <div style="width: 24px;"></div> <!-- Spacer -->
+            </div>
+        </header>
+
+        <div class="app-content">
+            <div class="card">
+                <form id="add-form">
+                    <div class="form-group">
+                        <label class="form-label">类型</label>
+                        <div style="display: flex; gap: 10px;">
+                            <button type="button" class="btn btn-primary type-btn" data-type="EXPENSE" onclick="selectType(this)">支出</button>
+                            <button type="button" class="btn type-btn" data-type="INCOME" style="background-color: #f8f9fa; color: #333;" onclick="selectType(this)">收入</button>
+                        </div>
+                        <input type="hidden" id="type" value="EXPENSE">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="amount">金额</label>
+                        <input type="number" id="amount" class="form-control" placeholder="0.00" step="0.01" style="font-size: 1.5rem; text-align: right;" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="categoryId">分类</label>
+                        <select id="categoryId" class="form-control">
+                            <option value="2">餐饮</option>
+                            <option value="3">交通</option>
+                            <option value="4">住房</option>
+                            <option value="5">娱乐</option>
+                            <option value="1">工资 (收入)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="date">日期</label>
+                        <input type="date" id="date" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="description">备注</label>
+                        <textarea id="description" class="form-control" rows="3" placeholder="添加备注..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">保存</button>
+                </form>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </a>
+            <a href="list.html" class="nav-item">
+                <i class="fas fa-list"></i>
+                <span>明细</span>
+            </a>
+            <a href="stats.html" class="nav-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>统计</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </a>
+        </nav>
+    </div>
+</div>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+    // Set default date to today
+    document.getElementById('date').valueAsDate = new Date();
+
+    function selectType(btn) {
+        // Reset all buttons
+        document.querySelectorAll('.type-btn').forEach(b => {
+            b.classList.remove('btn-primary');
+            b.style.backgroundColor = '#f8f9fa';
+            b.style.color = '#333';
+        });
+
+        // Highlight selected
+        btn.classList.add('btn-primary');
+        btn.style.backgroundColor = ''; // Use CSS class color
+        btn.style.color = '';
+
+        // Set hidden input
+        document.getElementById('type').value = btn.dataset.type;
+    }
+
+    document.getElementById('add-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (!checkLogin()) return;
+
+        const transaction = {
+            type: document.getElementById('type').value,
+            amount: parseFloat(document.getElementById('amount').value),
+            categoryId: parseInt(document.getElementById('categoryId').value),
+            transactionDate: document.getElementById('date').value,
+            description: document.getElementById('description').value,
+            userId: 1 // In real app, backend extracts this from token
+        };
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        
+        try {
+            btn.disabled = true;
+            btn.textContent = '保存中...';
+            
+            await addTransaction(transaction);
+            
+            alert('保存成功');
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error(error);
+            alert('保存失败: ' + error.message);
+            btn.disabled = false;
+            btn.textContent = '保存';
+        }
+    });
+</script>
+
+</body>
+</html>

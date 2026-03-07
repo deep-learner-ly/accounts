@@ -1,0 +1,10 @@
+- [x] UI原型包含首页、记账页、列表页、统计页、个人中心页
+- [x] UI原型交互逻辑清晰，无AI入口
+- [x] Spring Boot后端服务启动正常，连接MySQL/Redis成功
+- [x] 数据库表结构正确创建 (User, Transaction, Category)
+- [x] MyBatis Mapper SQL执行正确
+- [x] APP能够正常运行在模拟器/真机上
+- [x] APP能够完成基本的记账流程 (增删改查)
+- [x] 统计功能数据准确
+- [x] 数据导出Excel功能正常
+- [x] 数据备份/恢复功能正常

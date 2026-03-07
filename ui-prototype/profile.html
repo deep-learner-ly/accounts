@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookkeeping App - Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Profile Screen -->
+    <div class="mobile-screen">
+        <header class="app-header">
+            <div class="title">个人中心</div>
+        </header>
+
+        <div class="app-content">
+            <div class="profile-header">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h2 style="font-size: 1.2rem; margin-bottom: 5px;">张三</h2>
+                <div style="font-size: 0.9rem; color: #6c757d;">ID: 10086</div>
+            </div>
+
+            <div class="card" style="padding: 0;">
+                <ul class="menu-list">
+                    <li>
+                        <a href="#" class="menu-item">
+                            <i class="fas fa-cog"></i>
+                            <span>设置</span>
+                            <i class="fas fa-chevron-right" style="margin-left: auto; color: #ccc; width: auto; font-size: 0.8rem;"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="menu-item">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>账单导出</span>
+                            <i class="fas fa-chevron-right" style="margin-left: auto; color: #ccc; width: auto; font-size: 0.8rem;"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="menu-item">
+                            <i class="fas fa-bell"></i>
+                            <span>提醒设置</span>
+                            <i class="fas fa-chevron-right" style="margin-left: auto; color: #ccc; width: auto; font-size: 0.8rem;"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="menu-item">
+                            <i class="fas fa-question-circle"></i>
+                            <span>帮助与反馈</span>
+                            <i class="fas fa-chevron-right" style="margin-left: auto; color: #ccc; width: auto; font-size: 0.8rem;"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <button class="btn btn-danger" style="margin-top: 20px;">退出登录</button>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </a>
+            <a href="list.html" class="nav-item">
+                <i class="fas fa-list"></i>
+                <span>明细</span>
+            </a>
+            <a href="stats.html" class="nav-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>统计</span>
+            </a>
+            <a href="profile.html" class="nav-item active">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </a>
+        </nav>
+    </div>
+</div>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookkeeping App - All Screens</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .screen-label {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Home Screen -->
+    <div>
+        <div class="screen-label">Home (index.html)</div>
+        <div class="mobile-screen">
+            <header class="app-header">
+                <div class="title">我的账本</div>
+            </header>
+            <div class="app-content">
+                <div class="card balance-card">
+                    <div class="balance-label">总余额</div>
+                    <div class="balance-amount">¥ 12,450.00</div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                        <div>
+                            <div style="font-size: 0.8rem; opacity: 0.8;">本月收入</div>
+                            <div style="font-weight: bold;">+ ¥ 5,200</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.8rem; opacity: 0.8;">本月支出</div>
+                            <div style="font-weight: bold;">- ¥ 1,850</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h3 style="font-size: 1rem; color: #333;">最近交易</h3>
+                    <a href="#" style="font-size: 0.8rem; color: #007bff; text-decoration: none;">查看全部</a>
+                </div>
+                <div class="card">
+                    <div class="transaction-item">
+                        <div class="t-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="t-details"><div class="t-title">超市购物</div><div class="t-date">今天 14:30</div></div>
+                        <div class="t-amount expense">- ¥ 245.00</div>
+                    </div>
+                    <div class="transaction-item">
+                        <div class="t-icon"><i class="fas fa-utensils"></i></div>
+                        <div class="t-details"><div class="t-title">午餐</div><div class="t-date">今天 12:15</div></div>
+                        <div class="t-amount expense">- ¥ 35.00</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="fab"><i class="fas fa-plus"></i></a>
+            <nav class="bottom-nav">
+                <a href="#" class="nav-item active"><i class="fas fa-home"></i><span>首页</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-list"></i><span>明细</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-chart-pie"></i><span>统计</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-user"></i><span>我的</span></a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Add Screen -->
+    <div>
+        <div class="screen-label">Add Transaction (add.html)</div>
+        <div class="mobile-screen">
+            <header class="app-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <a href="#" style="color: white; text-decoration: none;"><i class="fas fa-arrow-left"></i></a>
+                    <div class="title">记一笔</div>
+                    <div style="width: 24px;"></div>
+                </div>
+            </header>
+            <div class="app-content">
+                <div class="card">
+                    <form>
+                        <div class="form-group">
+                            <label class="form-label">类型</label>
+                            <div style="display: flex; gap: 10px;">
+                                <button type="button" class="btn btn-primary" style="flex: 1;">支出</button>
+                                <button type="button" class="btn" style="flex: 1; background-color: #f8f9fa; color: #333;">收入</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">金额</label>
+                            <input type="number" class="form-control" placeholder="0.00" style="font-size: 1.5rem; text-align: right;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">分类</label>
+                            <select class="form-control">
+                                <option>餐饮</option>
+                                <option>购物</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary" style="margin-top: 20px;">保存</button>
+                    </form>
+                </div>
+            </div>
+            <nav class="bottom-nav">
+                <a href="#" class="nav-item"><i class="fas fa-home"></i><span>首页</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-list"></i><span>明细</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-chart-pie"></i><span>统计</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-user"></i><span>我的</span></a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- List Screen -->
+    <div>
+        <div class="screen-label">List (list.html)</div>
+        <div class="mobile-screen">
+            <header class="app-header">
+                <div class="title">账单明细</div>
+            </header>
+            <div class="app-content">
+                <div class="date-header">今天</div>
+                <div class="card" style="padding: 0 15px;">
+                    <div class="transaction-item">
+                        <div class="t-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="t-details"><div class="t-title">超市购物</div><div class="t-date">14:30</div></div>
+                        <div class="t-amount expense">- ¥ 245.00</div>
+                    </div>
+                </div>
+                <div class="date-header">昨天</div>
+                <div class="card" style="padding: 0 15px;">
+                    <div class="transaction-item">
+                        <div class="t-icon"><i class="fas fa-money-bill-wave"></i></div>
+                        <div class="t-details"><div class="t-title">工资</div><div class="t-date">09:00</div></div>
+                        <div class="t-amount income">+ ¥ 5,000.00</div>
+                    </div>
+                </div>
+            </div>
+            <nav class="bottom-nav">
+                <a href="#" class="nav-item"><i class="fas fa-home"></i><span>首页</span></a>
+                <a href="#" class="nav-item active"><i class="fas fa-list"></i><span>明细</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-chart-pie"></i><span>统计</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-user"></i><span>我的</span></a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Stats Screen -->
+    <div>
+        <div class="screen-label">Stats (stats.html)</div>
+        <div class="mobile-screen">
+            <header class="app-header">
+                <div class="title">统计报表</div>
+            </header>
+            <div class="app-content">
+                <div class="card">
+                    <h3 style="text-align: center; margin-bottom: 15px; font-size: 1rem;">支出构成</h3>
+                    <div style="width: 100px; height: 100px; border-radius: 50%; background: conic-gradient(#007bff 0% 40%, #28a745 40% 100%); margin: 0 auto 20px;"></div>
+                </div>
+            </div>
+            <nav class="bottom-nav">
+                <a href="#" class="nav-item"><i class="fas fa-home"></i><span>首页</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-list"></i><span>明细</span></a>
+                <a href="#" class="nav-item active"><i class="fas fa-chart-pie"></i><span>统计</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-user"></i><span>我的</span></a>
+            </nav>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

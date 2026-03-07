@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookkeeping App - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Home Screen -->
+    <div class="mobile-screen">
+        <header class="app-header">
+            <div class="title">我的账本</div>
+        </header>
+
+        <div class="app-content">
+            <!-- Balance Card -->
+            <div class="card balance-card">
+                <div class="balance-label">总余额</div>
+                <div class="balance-amount" id="total-balance">¥ 0.00</div>
+                <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                    <div>
+                        <div style="font-size: 0.8rem; opacity: 0.8;">本月收入</div>
+                        <div style="font-weight: bold;" id="total-income">+ ¥ 0.00</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; opacity: 0.8;">本月支出</div>
+                        <div style="font-weight: bold;" id="total-expense">- ¥ 0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="font-size: 1rem; color: #333;">最近交易</h3>
+                <a href="list.html" style="font-size: 0.8rem; color: #007bff; text-decoration: none;">查看全部</a>
+            </div>
+
+            <div class="card" id="recent-transactions">
+                <!-- Transactions will be loaded here -->
+                <div style="text-align: center; color: #999; padding: 20px;">加载中...</div>
+            </div>
+        </div>
+
+        <a href="add.html" class="fab">
+            <i class="fas fa-plus"></i>
+        </a>
+
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </a>
+            <a href="list.html" class="nav-item">
+                <i class="fas fa-list"></i>
+                <span>明细</span>
+            </a>
+            <a href="stats.html" class="nav-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>统计</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </a>
+        </nav>
+    </div>
+</div>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        // Check login status
+        if (!checkLogin()) return;
+
+        try {
+            // Load stats
+            const stats = await fetchStats('monthly');
+            document.getElementById('total-income').textContent = `+ ¥ ${formatMoney(stats.totalIncome)}`;
+            document.getElementById('total-expense').textContent = `- ¥ ${formatMoney(stats.totalExpense)}`;
+            document.getElementById('total-balance').textContent = `¥ ${formatMoney(stats.balance)}`;
+
+            // Load recent transactions
+            const transactions = await fetchTransactions();
+            const recentList = document.getElementById('recent-transactions');
+            
+            if (transactions.length === 0) {
+                recentList.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">暂无交易记录</div>';
+            } else {
+                recentList.innerHTML = transactions.slice(0, 5).map(t => renderTransactionItem(t)).join('');
+            }
+        } catch (error) {
+            console.error('Error loading data:', error);
+            alert('加载数据失败，请检查网络');
+        }
+    });
+
+    function renderTransactionItem(t) {
+        const isExpense = t.type === 'EXPENSE';
+        const amountClass = isExpense ? 'expense' : 'income';
+        const sign = isExpense ? '-' : '+';
+        const iconClass = getCategoryIcon(t.categoryId); // You might need a mapping here
+        
+        return `
+            <div class="transaction-item">
+                <div class="t-icon">
+                    <i class="fas ${iconClass}"></i>
+                </div>
+                <div class="t-details">
+                    <div class="t-title">${t.description || '未命名'}</div>
+                    <div class="t-date">${t.transactionDate}</div>
+                </div>
+                <div class="t-amount ${amountClass}">${sign} ¥ ${formatMoney(t.amount)}</div>
+            </div>
+        `;
+    }
+
+    function getCategoryIcon(categoryId) {
+        // Simple mapping for demo
+        const icons = {
+            1: 'fa-money-bill-wave', // Salary
+            2: 'fa-utensils', // Food
+            3: 'fa-bus', // Transport
+            4: 'fa-home', // Housing
+            5: 'fa-gamepad' // Entertainment
+        };
+        return icons[categoryId] || 'fa-question';
+    }
+
+    function formatMoney(amount) {
+        return parseFloat(amount).toFixed(2);
+    }
+</script>
+
+</body>
+</html>

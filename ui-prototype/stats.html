@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookkeeping App - Statistics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .chart-bar {
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            margin-top: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        .chart-fill {
+            height: 100%;
+            background-color: #007bff;
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
+        .stat-row {
+            margin-bottom: 15px;
+        }
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+        .donut-chart {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #007bff 0% 40%, 
+                #28a745 40% 70%, 
+                #ffc107 70% 90%, 
+                #dc3545 90% 100%
+            );
+            margin: 0 auto 20px;
+            position: relative;
+        }
+        .donut-inner {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Stats Screen -->
+    <div class="mobile-screen">
+        <header class="app-header">
+            <div class="title">统计报表</div>
+        </header>
+
+        <div class="app-content">
+            <!-- Month Selector -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <button class="btn btn-sm" style="width: auto; background: none; color: #333;"><i class="fas fa-chevron-left"></i></button>
+                <span style="font-weight: bold; margin: 0 10px;">2023年 10月</span>
+                <button class="btn btn-sm" style="width: auto; background: none; color: #333;"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <div class="card">
+                <h3 style="text-align: center; margin-bottom: 15px; font-size: 1rem;">支出构成</h3>
+                <div class="donut-chart">
+                    <div class="donut-inner">
+                        <div style="font-size: 0.8rem; color: #6c757d;">总支出</div>
+                        <div style="font-weight: bold;" id="total-expense">¥ 0.00</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-around; font-size: 0.8rem; text-align: center;">
+                    <div><i class="fas fa-circle" style="color: #007bff;"></i> 餐饮 40%</div>
+                    <div><i class="fas fa-circle" style="color: #28a745;"></i> 购物 30%</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 15px; font-size: 1rem;">分类排行</h3>
+                <div id="category-stats">
+                    <div style="text-align: center; color: #999; padding: 20px;">暂无数据</div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </a>
+            <a href="list.html" class="nav-item">
+                <i class="fas fa-list"></i>
+                <span>明细</span>
+            </a>
+            <a href="stats.html" class="nav-item active">
+                <i class="fas fa-chart-pie"></i>
+                <span>统计</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </a>
+        </nav>
+    </div>
+</div>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        if (!checkLogin()) return;
+
+        try {
+            const stats = await fetchStats('monthly');
+            document.getElementById('total-expense').textContent = `¥ ${parseFloat(stats.totalExpense).toFixed(2)}`;
+            
+            // In a real app, backend would return breakdown by category.
+            // Since our simple backend only returns totals, we'll mock the breakdown based on total expense
+            // or just show a message. For this demo, we'll just show the total.
+            
+            // Mocking category data for visualization if expense > 0
+            if (stats.totalExpense > 0) {
+                 renderMockCategoryStats(stats.totalExpense);
+            }
+
+        } catch (error) {
+            console.error('Error loading stats:', error);
+        }
+    });
+
+    function renderMockCategoryStats(total) {
+        // This is just a visual mock since our backend API is simple
+        const container = document.getElementById('category-stats');
+        container.innerHTML = `
+             <div class="stat-row">
+                <div class="stat-header">
+                    <span><i class="fas fa-utensils" style="color: #007bff; margin-right: 5px;"></i> 餐饮</span>
+                    <span>¥ ${(total * 0.6).toFixed(2)}</span>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-fill" style="width: 60%;"></div>
+                </div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-header">
+                    <span><i class="fas fa-bus" style="color: #ffc107; margin-right: 5px;"></i> 交通</span>
+                    <span>¥ ${(total * 0.4).toFixed(2)}</span>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-fill" style="width: 40%; background-color: #ffc107;"></div>
+                </div>
+            </div>
+        `;
+    }
+</script>
+
+</body>
+</html>

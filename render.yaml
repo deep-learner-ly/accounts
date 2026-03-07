@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: bookkeeping-backend
+    env: docker
+    plan: free
+    dockerContext: backend
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:h2:file:./data/bookkeeping;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+      - key: PORT
+        value: 8080
+
+  - type: static
+    name: bookkeeping-frontend
+    env: static
+    buildCommand: ""
+    staticPublishPath: ui-prototype
+    pullRequestPreviewsEnabled: false
+    envVars:
+      - key: API_BASE_URL
+        fromService:
+          type: web
+          name: bookkeeping-backend
+          property: url
