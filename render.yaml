@@ -22,6 +22,8 @@ services:
           property: password
       - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
         value: org.postgresql.Driver
+      - key: SPRING_SQL_INIT_PLATFORM
+        value: postgresql
       - key: PORT
         value: 8080
 
