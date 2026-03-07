@@ -9,9 +9,28 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:h2:file:./data/bookkeeping;DB_CLOSE_ON_EXIT=FALSE
+        fromDatabase:
+          name: bookkeeping-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: bookkeeping-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: bookkeeping-db
+          property: password
+      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+        value: org.postgresql.Driver
       - key: PORT
         value: 8080
+
+  - type: psql
+    name: bookkeeping-db
+    env: docker
+    plan: free
+    databaseName: bookkeeping
+    user: bookkeeping_user
 
   - type: web
     name: bookkeeping-frontend
