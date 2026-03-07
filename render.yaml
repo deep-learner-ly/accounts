@@ -9,7 +9,7 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:h2:file:./data/bookkeeping;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+        value: jdbc:h2:file:./data/bookkeeping;DB_CLOSE_ON_EXIT=FALSE
       - key: PORT
         value: 8080
 
