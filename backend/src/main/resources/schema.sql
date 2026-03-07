@@ -29,6 +29,9 @@ CREATE TABLE IF NOT EXISTS transactions (
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
+-- Insert default user (ID 1)
+MERGE INTO users (id, phone, password) KEY(id) VALUES (1, '13800138000', 'password123');
+
 -- Insert default categories if not exists
 MERGE INTO categories (id, name, type, user_id) KEY(id) VALUES 
 (1, 'Salary', 'INCOME', NULL),
