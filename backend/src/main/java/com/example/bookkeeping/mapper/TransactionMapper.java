@@ -1,12 +1,12 @@
 package com.example.bookkeeping.mapper;
 
+import com.example.bookkeeping.model.ChartData;
 import com.example.bookkeeping.model.Transaction;
 import org.apache.ibatis.annotations.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface TransactionMapper {
@@ -36,4 +36,13 @@ public interface TransactionMapper {
                                     @Param("type") String type,
                                     @Param("startDate") LocalDate startDate,
                                     @Param("endDate") LocalDate endDate);
+
+    @Select("SELECT TO_CHAR(transaction_date, 'YYYY-MM-DD') as label, " +
+            "SUM(CASE WHEN type = 'INCOME' THEN amount ELSE 0 END) as income, " +
+            "SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END) as expense " +
+            "FROM transactions " +
+            "WHERE user_id = #{userId} AND transaction_date BETWEEN #{startDate} AND #{endDate} " +
+            "GROUP BY transaction_date " +
+            "ORDER BY transaction_date")
+    List<ChartData> getDailyStats(@Param("userId") Long userId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }

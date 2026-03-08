@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS transactions (
 
 -- Insert default user (ID 1)
 MERGE INTO users (id, phone, password) KEY(id) VALUES (1, '13800138000', 'password123');
--- Reset sequence to ensure next ID > 1
-ALTER TABLE users ALTER COLUMN id RESTART WITH 2;
+-- Reset sequence to ensure next ID > 100
+ALTER TABLE users ALTER COLUMN id RESTART WITH 100;
 
 -- Reminders table
 CREATE TABLE IF NOT EXISTS reminders (
